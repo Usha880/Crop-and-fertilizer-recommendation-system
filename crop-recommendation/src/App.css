@@ -1,0 +1,73 @@
+/* src/App.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--bg, #f5f6fa);
+  min-height: 100vh;
+}
+
+.theme-dark {
+  --bg: #181925;
+  --fg: #f4f4f4;
+  --sidebar-bg: #232339;
+  --card-bg: #292940;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.theme-light {
+  --bg: #f5f6fa;
+  --fg: #181925;
+  --sidebar-bg: #e6e9ef;
+  --card-bg: #fff;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.main-content {
+  margin-left: 210px; /* width of sidebar */
+  min-height: 100vh;
+  padding: 2rem 3vw 2rem;
+  transition: margin-left 0.2s;
+}
+
+nav, .navbar {
+  height: 60px;
+  background: var(--sidebar-bg);
+  display: flex;
+  align-items: center;
+  padding: 0 2vw;
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,0.07);
+}
+
+button, input, select {
+  font-family: inherit;
+  font-size: 1em;
+  margin: 0.5em;
+  padding: 0.65em 1em;
+  border: none;
+  border-radius: 7px;
+}
+
+button {
+  background: #f5e960;
+  color: #1a1a1a;
+  cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(40,40,80,0.04);
+  transition: background 0.15s;
+}
+button:hover { background: #f9f06b; }
+
+input, select {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.theme-dark input, .theme-dark select {
+  background: #232339;
+  color: #f4f4f4;
+  border: 1px solid #333;
+}
+
+/* Add extra styling for sidebar, cards, etc as per your components... */
