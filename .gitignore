@@ -1,0 +1,14 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+.venv/
+
+# Node
+node_modules/
+
+# OS files
+Thumbs.db
+.DS_Store
