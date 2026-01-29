@@ -1,33 +1,18 @@
+/*
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/landing-image.jpg";
-import { FaLeaf, FaSeedling, FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext";
 
-const cardStyle = (dark) => ({
-  flex: "1 1 300px",
-  margin: "1rem",
-  padding: "2rem",
-  borderRadius: "12px",
-  boxShadow: dark
-    ? "0 4px 15px rgba(0,0,0,0.8)"
-    : "0 4px 15px rgba(0,0,0,0.1)",
-  backgroundColor: dark ? "#222" : "#fff",
-  color: dark ? "#eee" : "#222",
-  cursor: "pointer",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-});
+const LandingPage = () => {
+  const navigate = useNavigate();
+  const { dark, toggleTheme } = useTheme();
 
-const iconStyle = {
-  fontSize: "4rem",
-  marginBottom: "1rem",
-  color: "#45C4B0",
-};
-
-const LandingPage = ({ onNavigate, dark, toggleTheme }) => {
   return (
     <>
+      {/* HEADER */
+      /*
       <header
         style={{
           padding: "1rem 2rem",
@@ -41,17 +26,16 @@ const LandingPage = ({ onNavigate, dark, toggleTheme }) => {
           zIndex: 10,
         }}
       >
-        <h1>Crop & Fertilizer Recommendation</h1>
+        <h1>Crop and Fertilizer Recommendation System</h1>
+
         <button
           onClick={toggleTheme}
           aria-label="Toggle Theme"
           style={{
             fontSize: "1.5rem",
-            padding: "6px 12px",
             background: "none",
             border: "none",
             cursor: "pointer",
-            borderRadius: "6px",
             color: dark ? "#f5f6fa" : "#222",
           }}
         >
@@ -69,15 +53,14 @@ const LandingPage = ({ onNavigate, dark, toggleTheme }) => {
           backgroundPosition: "center",
         }}
       >
-        {/* Section 1: Welcome and Login */}
         <section
           style={{
             scrollSnapAlign: "start",
             height: "100vh",
-            padding: "4rem 2rem",
+            padding: "2rem",
             backgroundColor: dark
-              ? "rgba(18,18,18,0.85)"
-              : "rgba(255, 255, 255, 0.85)",
+              ? "rgba(18,18,18,0.7)"
+              : "rgba(255,255,255,0.7)",
             color: dark ? "#eee" : "#222",
             display: "flex",
             flexDirection: "column",
@@ -86,87 +69,158 @@ const LandingPage = ({ onNavigate, dark, toggleTheme }) => {
             textAlign: "center",
           }}
         >
-          <h2>Welcome to Crop & Fertilizer Recommendation System</h2>
-          <p>Modern advice for your farming success—powered by AI.</p>
-          <button
+          <h2
             style={{
-              margin: "1.5rem",
-              padding: "0.75rem 1.5rem",
-              fontSize: "1.1rem",
-              borderRadius: 6,
+              fontSize: "3rem",
+              fontWeight: "bold",
+              marginBottom: "1rem",
+            }}
+          >
+            Crop and Fertilizer Recommendation System
+          </h2>
+          <p style={{ fontSize: "1.25rem", marginBottom: "2rem" }}>
+            Modern advice for your farming success — powered by AI.
+          </p>
+
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              padding: "0.75rem 2rem",
+              fontSize: "1.2rem",
+              borderRadius: "6px",
               border: "none",
               backgroundColor: "#45C4B0",
               color: "#fff",
               cursor: "pointer",
             }}
-            onClick={() => onNavigate("login")}
           >
             Get Started (Login)
           </button>
-        </section>
 
-        {/* Section 2: Interactive Services cards */}
-        <section
+          <p style={{ marginTop: "1rem" }}>
+            Don't have an account?{" "}
+            <button
+              onClick={() => navigate("/register")}
+              style={{
+                background: "#ffe066",
+                border: "none",
+                borderRadius: 6,
+                padding: "5px 12px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              Register
+            </button>
+          </p>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default LandingPage;
+*/
+
+
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import bgImage from "../assets/landing-image.jpg"; // Make sure you have this image in your assets folder
+import { FaMoon, FaSun } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext";
+
+const LandingPage = () => {
+  const navigate = useNavigate();
+  const { dark, toggleTheme } = useTheme();
+
+  return (
+    <>
+      {/* HEADER */}
+      <header
+        style={{
+          padding: "1rem 2rem",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          background: dark ? "#222" : "#f5f6fa",
+          color: dark ? "#f5f6fa" : "#222",
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+        }}
+      >
+        <h1 style={{ margin: 0, fontSize: "1.5rem" }}>
+          Crop & Fertilizer Recommendation System
+        </h1>
+
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle Theme"
           style={{
-            scrollSnapAlign: "start",
-            minHeight: "100vh",
-            padding: "4rem 2rem",
-            backgroundColor: dark
-              ? "rgba(26,26,26,0.85)"
-              : "rgba(240,244,248,0.85)",
-            color: dark ? "#eee" : "#222",
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
+            fontSize: "1.5rem",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: dark ? "#f5f6fa" : "#222",
           }}
         >
-          {/* Crop Recommendation Card */}
-          <div
-            style={cardStyle(dark)}
-            onClick={() => onNavigate("crop-recommendation")}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.05)";
-              e.currentTarget.style.boxShadow = dark
-                ? "0 8px 20px rgba(0,0,0,1)"
-                : "0 8px 20px rgba(0,0,0,0.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = dark
-                ? "0 4px 15px rgba(0,0,0,0.8)"
-                : "0 4px 15px rgba(0,0,0,0.1)";
-            }}
-          >
-            <FaLeaf style={iconStyle} />
-            <h3>Crop Recommendation</h3>
-            <p>
-              Get AI-powered advice to select the best crops for your soil and region.
-            </p>
-          </div>
+          {dark ? <FaSun /> : <FaMoon />}
+        </button>
+      </header>
 
-          {/* Fertilizer Recommendation Card */}
-          <div
-            style={cardStyle(dark)}
-            onClick={() => onNavigate("fertilizer-recommendation")}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.05)";
-              e.currentTarget.style.boxShadow = dark
-                ? "0 8px 20px rgba(0,0,0,1)"
-                : "0 8px 20px rgba(0,0,0,0.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = dark
-                ? "0 4px 15px rgba(0,0,0,0.8)"
-                : "0 4px 15px rgba(0,0,0,0.1)";
+      {/* MAIN SECTION */}
+      <div
+        style={{
+          height: "100vh",
+          overflowY: "scroll",
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <section
+          style={{
+            height: "100vh",
+            padding: "2rem",
+            backgroundColor: dark
+              ? "rgba(18,18,18,0.7)"
+              : "rgba(255,255,255,0.7)",
+            color: dark ? "#eee" : "#222",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "3rem",
+              fontWeight: "bold",
+              marginBottom: "1rem",
             }}
           >
-            <FaSeedling style={iconStyle} />
-            <h3>Fertilizer Recommendation</h3>
-            <p>
-              Precision fertilizer suggestions to maximize yield and reduce waste.
-            </p>
-          </div>
+            Crop & Fertilizer Recommendation System
+          </h2>
+          <p style={{ fontSize: "1.25rem", marginBottom: "2rem" }}>
+            Modern advice for your farming success — powered by AI.
+          </p>
+
+          <button
+            onClick={() => navigate("/login")}
+            style={{
+              padding: "0.75rem 2rem",
+              fontSize: "1.2rem",
+              borderRadius: "6px",
+              border: "none",
+              backgroundColor: "#45C4B0",
+              color: "#fff",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Get Started (Login)
+          </button>
         </section>
       </div>
     </>

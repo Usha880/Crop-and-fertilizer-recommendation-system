@@ -1,73 +1,92 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-  Outlet,
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import PortalLayout from "./components/PortalLayout"; // Keep this import
+import { ThemeProvider } from "./context/ThemeContext";
+import { LanguageProvider } from "./context/LanguageContext";
+
+import PortalLayout from "./components/PortalLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import LandingPage from "./pages/Landingpage";
+import HomePage from "./components/HomePage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Logout from "./pages/Logout";
 import FarmerPortal from "./pages/FarmerPortal";
 import Dashboard from "./pages/Dashboard";
 import Recommendations from "./pages/Recommendations";
-import Settings from "./pages/Settings";
-import Location from "./pages/Location";
-import Logout from "./pages/Logout";
+import Feedback from "./pages/Feedback";
+import SupportedLocations from "./pages/SupportedLocations";
 
 import "./App.css";
 
-// HOC wrapper for navigation and theming
-function WrapWithNavigate({ Component, dark, toggleTheme, ...props }) {
-  const navigate = useNavigate();
-  return (
-    <Component
-      {...props}
-      dark={dark}
-      toggleTheme={toggleTheme}
-      onNavigate={(page) => navigate(`/${page}`)}
-    />
-  );
-}
-
 function App() {
-  const [dark, setDark] = useState(false);
-  const toggleTheme = () => setDark((d) => !d);
-
   return (
-    <div className={dark ? "theme-dark" : "theme-light"}>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={<WrapWithNavigate Component={LandingPage} dark={dark} toggleTheme={toggleTheme} />}
-          />
-          <Route
-            path="/login"
-            element={<WrapWithNavigate Component={Login} dark={dark} toggleTheme={toggleTheme} />}
-          />
-          <Route
-            path="/register"
-            element={<WrapWithNavigate Component={Register} dark={dark} toggleTheme={toggleTheme} />}
-          />
+    <ThemeProvider>
+      <LanguageProvider>
+        <Router>
+          <Routes>
+            {/* PUBLIC ROUTES */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/logout" element={<Logout />} />
 
-          {/* Protected routes wrapped by PortalLayout */}
-          <Route element={<PortalLayout dark={dark} toggleTheme={toggleTheme} />}>
-            <Route path="/farmerportal" element={<FarmerPortal />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/recommendations" element={<Recommendations />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/location" element={<Location />} />
-          </Route>
-        </Routes>
-      </Router>
-    </div>
+            {/* PORTAL LAYOUT ROUTES */}
+            <Route element={<PortalLayout />}>
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/farmerportal"
+                element={
+                  <ProtectedRoute>
+                    <FarmerPortal />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/recommendations"
+                element={
+                  <ProtectedRoute>
+                    <Recommendations />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/feedback"
+                element={
+                  <ProtectedRoute>
+                    <Feedback />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/supported-locations"
+                element={
+                  <ProtectedRoute>
+                    <SupportedLocations />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+          </Routes>
+        </Router>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

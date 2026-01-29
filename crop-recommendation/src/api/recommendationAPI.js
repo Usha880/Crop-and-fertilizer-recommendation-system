@@ -1,4 +1,3 @@
-// Sends lat/lon to backend and fetches crop and fertilizer recommendations
 export async function getCropRecommendation(lat, lon) {
   try {
     const response = await fetch('http://127.0.0.1:5000/api/recommend/crop', {

@@ -1,6 +1,7 @@
-export async function resolvePin(pin) {
+export async function resolvePin(pincode) {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/api/geo/resolve?pin=${pin}`);
+    // Note: Use 'pincode' as the query parameter name to match backend expectation
+    const response = await fetch(`http://127.0.0.1:5000/api/geo/resolve?pincode=${encodeURIComponent(pincode)}`);
 
     if (!response.ok) {
       let errorMsg = 'Failed to resolve PIN';

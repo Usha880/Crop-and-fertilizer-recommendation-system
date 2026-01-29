@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext";
 
-const Login = ({ onNavigate, dark, toggleTheme }) => {
+const Login = () => {
+  const navigate = useNavigate();
+  const { dark, toggleTheme } = useTheme();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Basic validation example
+
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError("Invalid email format");
       return;
@@ -18,112 +23,169 @@ const Login = ({ onNavigate, dark, toggleTheme }) => {
       setError("Password must be at least 8 characters");
       return;
     }
-    // Clear errors and navigate
+
     setError("");
-    onNavigate("farmerportal");
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Login failed");
+        return;
+      }
+
+      localStorage.setItem("authToken", "logged-in");
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("email", email);
+
+      navigate("/home");
+    } catch (err) {
+      setError("Server error. Please try again.");
+    }
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
+    // ✅ FULL PAGE BACKGROUND FIX
+    <div
       style={{
-        background: dark ? "#1C1E2A" : "#EAF6FF",
-        color: dark ? "#fff" : "#222",
-        padding: 36,
-        maxWidth: 420,
-        margin: "40px auto",
-        borderRadius: 12,
-        position: "relative",
+        minHeight: "100vh",
+        backgroundColor: dark ? "#1C1E2A" : "#EAF6FF",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        paddingTop: 40,
       }}
     >
-      {/* Theme Toggle */}
-      <button
-        type="button"
-        onClick={toggleTheme}
+      <form
+        onSubmit={handleLogin}
         style={{
-          position: "absolute",
-          right: 16,
-          top: 16,
-          background: "none",
-          border: "none",
-          color: dark ? "#ffe066" : "#222",
-          fontSize: "1.5rem",
+          background: dark ? "#26283B" : "#ffffff",
+          color: dark ? "#fff" : "#222",
+          padding: 36,
+          width: "100%",
+          maxWidth: 420,
+          borderRadius: 12,
+          position: "relative",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
         }}
-        aria-label="Toggle theme"
       >
-        {dark ? <FaSun /> : <FaMoon />}
-      </button>
+        {/* THEME TOGGLE */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          style={{
+            position: "absolute",
+            right: 16,
+            top: 16,
+            background: "none",
+            border: "none",
+            color: dark ? "#ffe066" : "#222",
+            fontSize: "1.4rem",
+            cursor: "pointer",
+          }}
+        >
+          {dark ? <FaSun /> : <FaMoon />}
+        </button>
 
-      <h2 style={{ textAlign: "center" }}>Login</h2>
-      <label>Email
+        <h2 style={{ textAlign: "center", marginBottom: 20 }}>Login</h2>
+
+        <label>Email</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
           placeholder="Email"
-          style={{ display: "block", width: "100%", margin: "10px 0" }}
+          required
+          style={{
+            display: "block",
+            width: "100%",
+            margin: "10px 0",
+            padding: 10,
+            borderRadius: 6,
+            border: "1px solid #ccc",
+          }}
         />
-      </label>
-      <label>Password
+
+        <label>Password</label>
         <input
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
           placeholder="Password"
-          style={{ display: "block", width: "100%", margin: "10px 0" }}
-        />
-      </label>
-      <div style={{ marginBottom: 10 }}>
-        <input
-          type="checkbox"
-          checked={showPassword}
-          onChange={() => setShowPassword((v) => !v)}
-        />{" "}
-        Show Password
-      </div>
-
-      {error && (
-        <div style={{ color: "red", marginBottom: 10, fontWeight: "bold" }}>
-          {error}
-        </div>
-      )}
-
-      <button
-        type="submit"
-        style={{
-          marginTop: 16,
-          padding: "10px 28px",
-          background: "#53a8fa",
-          color: "#fff",
-          border: "none",
-          borderRadius: 6,
-          cursor: "pointer",
-          width: "100%",
-          fontWeight: "bold",
-        }}
-      >
-        Login
-      </button>
-      <div style={{ marginTop: 15, textAlign: "center" }}>
-        Don't have an account?{" "}
-        <button
-          type="button"
-          onClick={() => onNavigate("register")}
+          required
           style={{
-            background: "#ffe066",
+            display: "block",
+            width: "100%",
+            margin: "10px 0",
+            padding: 10,
+            borderRadius: 6,
+            border: "1px solid #ccc",
+          }}
+        />
+
+        <div style={{ marginBottom: 10 }}>
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={() => setShowPassword((v) => !v)}
+          />{" "}
+          Show Password
+        </div>
+
+        {error && (
+          <div
+            style={{
+              color: "#ff6b6b",
+              marginBottom: 10,
+              fontWeight: "bold",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          style={{
+            marginTop: 16,
+            padding: "12px",
+            background: "#53a8fa",
+            color: "#fff",
             border: "none",
             borderRadius: 6,
-            padding: "7px 16px",
             cursor: "pointer",
+            width: "100%",
             fontWeight: "bold",
           }}
         >
-          Register here
+          Login
         </button>
-      </div>
-    </form>
+
+        <div style={{ marginTop: 15, textAlign: "center" }}>
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => navigate("/register")}
+            style={{
+              background: "#ffe066",
+              border: "none",
+              borderRadius: 6,
+              padding: "7px 16px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Register here
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

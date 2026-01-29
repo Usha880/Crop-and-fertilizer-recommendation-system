@@ -2,8 +2,11 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
-const PortalLayout = ({ dark, toggleTheme }) => {
+const PortalLayout = () => {
+  const { dark, toggleTheme } = useTheme();
+
   return (
     <div
       style={{
@@ -16,13 +19,16 @@ const PortalLayout = ({ dark, toggleTheme }) => {
       }}
     >
       <Sidebar dark={dark} />
+
       <div
         style={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           padding: "1.5rem 2rem",
-          backgroundColor: dark ? "rgba(11,11,11,0.85)" : "rgba(255,255,255,0.9)",
+          backgroundColor: dark
+            ? "rgba(11,11,11,0.85)"
+            : "rgba(255,255,255,0.9)",
           borderRadius: "1rem",
           margin: "1rem",
           boxShadow: dark
@@ -31,6 +37,7 @@ const PortalLayout = ({ dark, toggleTheme }) => {
         }}
       >
         <Navbar dark={dark} toggleTheme={toggleTheme} />
+
         <main style={{ marginTop: "1rem", flexGrow: 1 }}>
           <Outlet />
         </main>

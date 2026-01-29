@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext";
 
-const Register = ({ onNavigate, dark, toggleTheme }) => {
+const Register = () => {
+  const navigate = useNavigate();
+  const { dark, toggleTheme } = useTheme();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,6 +15,7 @@ const Register = ({ onNavigate, dark, toggleTheme }) => {
   const [error, setError] = useState("");
 
   const validateEmail = (email) => email.endsWith("@gmail.com");
+
   const validatePassword = (p) =>
     /[a-z]/.test(p) &&
     /[A-Z]/.test(p) &&
@@ -17,8 +23,9 @@ const Register = ({ onNavigate, dark, toggleTheme }) => {
     /[^A-Za-z0-9]/.test(p) &&
     p.length >= 8;
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+
     if (!validateEmail(email)) {
       setError("Email must end with @gmail.com");
       return;
@@ -33,9 +40,35 @@ const Register = ({ onNavigate, dark, toggleTheme }) => {
       setError("Passwords do not match");
       return;
     }
+
     setError("");
-    alert("Registration successful! Please login.");
-    onNavigate("login");
+
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          password
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Registration failed");
+        return;
+      }
+
+      // ✅ store username for later use
+      localStorage.setItem("username", username);
+
+      alert("Registration successful! Please login.");
+      navigate("/login");
+    } catch (err) {
+      setError("Server error. Try again later.");
+    }
   };
 
   return (
@@ -51,7 +84,6 @@ const Register = ({ onNavigate, dark, toggleTheme }) => {
         position: "relative",
       }}
     >
-      {/* Theme Toggle */}
       <button
         type="button"
         onClick={toggleTheme}
@@ -63,54 +95,51 @@ const Register = ({ onNavigate, dark, toggleTheme }) => {
           border: "none",
           color: dark ? "#ffe066" : "#222",
           fontSize: "1.5rem",
+          cursor: "pointer",
         }}
-        aria-label="Toggle theme"
       >
         {dark ? <FaSun /> : <FaMoon />}
       </button>
 
       <h2 style={{ textAlign: "center" }}>Register</h2>
-      <label>
-        Username
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          style={{ display: "block", width: "100%", margin: "10px 0" }}
-        />
-      </label>
-      <label>
-        Email
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="example@gmail.com"
-          style={{ display: "block", width: "100%", margin: "10px 0" }}
-        />
-      </label>
-      <label>
-        Password
-        <input
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ display: "block", width: "100%", margin: "10px 0" }}
-        />
-      </label>
-      <label>
-        Confirm Password
-        <input
-          type={showPassword ? "text" : "password"}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          style={{ display: "block", width: "100%", margin: "10px 0" }}
-        />
-      </label>
+
+      <label>Username</label>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+        style={{ width: "100%", margin: "10px 0" }}
+      />
+
+      <label>Email</label>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        placeholder="example@gmail.com"
+        style={{ width: "100%", margin: "10px 0" }}
+      />
+
+      <label>Password</label>
+      <input
+        type={showPassword ? "text" : "password"}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        style={{ width: "100%", margin: "10px 0" }}
+      />
+
+      <label>Confirm Password</label>
+      <input
+        type={showPassword ? "text" : "password"}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+        required
+        style={{ width: "100%", margin: "10px 0" }}
+      />
+
       <div>
         <input
           type="checkbox"
@@ -142,12 +171,12 @@ const Register = ({ onNavigate, dark, toggleTheme }) => {
       >
         Register
       </button>
+
       <button
         type="button"
-        onClick={() => onNavigate("login")}
+        onClick={() => navigate("/login")}
         style={{
           marginTop: 12,
-          marginLeft: 0,
           background: "#ffe066",
           border: "none",
           borderRadius: 6,
