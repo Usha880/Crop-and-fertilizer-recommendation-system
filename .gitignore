@@ -1,14 +1,38 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# Virtual environments
-venv/
-.venv/
+# VS Code / IDE
+.vscode/
+.idea/
 
-# Node
-node_modules/
+# Logs
+*.log
 
-# OS files
-Thumbs.db
+# Datasets
+data/
+datasets/
+*.csv
+*.xlsx
+*.json
+
+# Trained models
+*.h5
+*.pkl
+*.joblib
+*.pt
+
+# System files
 .DS_Store
+Thumbs.db
+
+# Git LFS cache
+*.zip
+*.tar.gz
